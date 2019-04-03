@@ -2,6 +2,8 @@
   (:require [reagent.core :as r :refer [atom]]
             ["react-native" :as rn :refer [AppRegistry]]))
 
+(defonce component-to-update (atom nil))
+
 (defn content []
   [:> rn/Text {:style {:font-size 30
                        :font-weight "100"
@@ -16,9 +18,14 @@
                        :background-color "white"}}
    [content]])
 
+(def updatable-app-root
+  (with-meta app-root
+    {:component-did-mount
+     (fn [] (this-as ^js this
+                     (reset! component-to-update this)))}))
 
 
 (defn init []
   (.registerComponent AppRegistry
                       "CLJSReactNativeNavigation"
-                      #(r/reactify-component app-root)))
+                      #(r/reactify-component updatable-app-root)))
