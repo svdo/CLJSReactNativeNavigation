@@ -1,0 +1,12 @@
+{:source-paths
+ ["src/main"                     ;; production code
+  "src/test"]                    ;; yes we're going to add tests as well!
+
+ :dependencies
+ [[reagent "0.8.1"]]
+
+ :builds
+ {:myapp                         ;; the target definition
+  {:target :react-native         ;; the target type
+   :init-fn myapp/init           ;; react native's entry point
+   :output-dir "build"}}}        ;; where to put the built JS
