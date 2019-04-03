@@ -9,4 +9,5 @@
  {:myapp                         ;; the target definition
   {:target :react-native         ;; the target type
    :init-fn myapp/init           ;; react native's entry point
-   :output-dir "build"}}}        ;; where to put the built JS
+   :output-dir "build"           ;; where to put the built JS
+   :devtools {:autoload true}}}} ;; enables hot-reloading
