@@ -24,6 +24,8 @@
      (fn [] (this-as ^js this
                      (reset! component-to-update this)))}))
 
+(defn reload {:dev/after-load true} []
+  (.forceUpdate ^js @component-to-update))
 
 (defn init []
   (.registerComponent AppRegistry
