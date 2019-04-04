@@ -10,4 +10,10 @@
   {:target :react-native         ;; the target type
    :init-fn myapp/init           ;; react native's entry point
    :output-dir "build"           ;; where to put the built JS
-   :devtools {:autoload true}}}} ;; enables hot-reloading
+   :devtools {:autoload true}}
+  :test
+  {:target :node-test
+   :output-to "build/node-tests.js"
+   :ns-regexp "-test$"
+   :autorun true
+   :compiler-options {:reader-features #{:test}}}}} ;; enables hot-reloading

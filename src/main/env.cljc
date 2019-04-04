@@ -1,7 +1,8 @@
 (ns env
   (:require
    ["create-react-class" :as crc]
-   [react-native-navigation-bridge :as rnn-bridge]
+   #?@(:test []
+       :default [[react-native-navigation-bridge :as rnn-bridge]])
    [reagent.core :as r]))
 
 (declare register-component)
@@ -104,8 +105,16 @@
 (defn add-screen [key screen-def]
   (swap! screens-ref assoc key screen-def))
 
-(defn register-component [key component]
-  (rnn-bridge/register-component key component))
+#?(:test
+   (defn register-component [key component] [])
 
-(defn bind-component [component]
-  (rnn-bridge/bind-component component))
+   :default
+   (defn register-component [key component]
+     (rnn-bridge/register-component key component)))
+
+#?(:test
+   (defn bind-component [component] [])
+
+   :default
+   (defn bind-component [component]
+     (rnn-bridge/bind-component component)))
