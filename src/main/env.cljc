@@ -23,7 +23,7 @@
             :component-id (-> this .-props .-componentId)})
 
          wrapper
-         (crc #js                    ;; crc is create-react-class
+         (crc #js
                {:displayName
                 (str key "Wrapper")
 
@@ -49,7 +49,7 @@
                    (swap! mounted-ref update key dissoc (-> this .-state .-id))))
 
 
-               ;; FIXME: forward other lifecycles the same way
+                ;; FIXME: forward other lifecycles the same way
                 :navigationButtonPressed
                 (fn [params]
                   (this-as
@@ -66,7 +66,9 @@
                                      (boolean navigation-button-pressed)
                                      (pr-str props))
                      (when navigation-button-pressed
-                       (navigation-button-pressed (js->clj params :keywordize-keys true) props)))))
+                       (navigation-button-pressed
+                        (js->clj params :keywordize-keys true)
+                        props)))))
 
                 :componentDidAppear
                 (fn []
