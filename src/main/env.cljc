@@ -51,7 +51,7 @@
 
                ;; FIXME: forward other lifecycles the same way
                 :navigationButtonPressed
-                (fn []
+                (fn [params]
                   (this-as
                    ^js this
 
@@ -66,7 +66,7 @@
                                      (boolean navigation-button-pressed)
                                      (pr-str props))
                      (when navigation-button-pressed
-                       (navigation-button-pressed props)))))
+                       (navigation-button-pressed (js->clj params :keywordize-keys true) props)))))
 
                 :componentDidAppear
                 (fn []
