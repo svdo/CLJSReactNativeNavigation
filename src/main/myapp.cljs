@@ -28,16 +28,16 @@
   (.forceUpdate ^js @component-to-update))
 
 (defn init []
-  (env/register "App")
+  (env/register "App"
+                {:topBar {:visible "true"
+                          :title {:text "My App"}
+                          :rightButtons [{:id "add" :systemItem "add"}]}})
 
   (-> (rnn/Navigation.events)
       (.registerAppLaunchedListener
        (fn []
          (->> {:root
                {:stack
-                {:children [{:component {:name "App"}}]
-                 :options {:topBar {:visible "true"
-                                    :title {:text "My App"}
-                                    :rightButtons [{:id "add" :systemItem "add"}]}}}}}
+                {:children [{:component {:name "App"}}]}}}
               (clj->js)
               (rnn/Navigation.setRoot))))))

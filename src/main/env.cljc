@@ -12,89 +12,95 @@
 (defonce mounted-ref (atom {}))
 (defonce screens-ref (atom {}))
 
-(defn register [key]
-  (let [get-props
-        (fn [this]
-          {::key key
-           ::id (-> this .-state .-id)
-           :component-id (-> this .-props .-componentId)})
+(defn register
+  ([key]
+   (register key nil))
+  ([key options]
+   (let [get-props
+         (fn [this]
+           {::key key
+            ::id (-> this .-state .-id)
+            :component-id (-> this .-props .-componentId)})
 
-        wrapper
-        (crc #js                    ;; crc is create-react-class
-              {:displayName
-               (str key "Wrapper")
+         wrapper
+         (crc #js                    ;; crc is create-react-class
+               {:displayName
+                (str key "Wrapper")
 
-               :getInitialState
-               (let [id (swap! id-seq-ref inc)]
-                 (fn [] #js {:key key
-                             :id id}))
+                :getInitialState
+                (let [id (swap! id-seq-ref inc)]
+                  (fn [] #js {:key key
+                              :id id}))
 
-               :componentDidMount
-               (fn []
-                 (this-as
-                  ^js this
+                :componentDidMount
+                (fn []
+                  (this-as
+                   ^js this
 
-                  (bind-component this)
-                  (swap! mounted-ref
-                         assoc-in [key (-> this .-state .-id)] this)))
+                   (bind-component this)
+                   (swap! mounted-ref
+                          assoc-in [key (-> this .-state .-id)] this)))
 
-               :componentWillUnmount
-               (fn []
-                 (this-as
-                  ^js this
+                :componentWillUnmount
+                (fn []
+                  (this-as
+                   ^js this
 
-                  (swap! mounted-ref update key dissoc (-> this .-state .-id))))
+                   (swap! mounted-ref update key dissoc (-> this .-state .-id))))
 
 
                ;; FIXME: forward other lifecycles the same way
-               :navigationButtonPressed
-               (fn []
-                 (this-as
-                  ^js this
+                :navigationButtonPressed
+                (fn []
+                  (this-as
+                   ^js this
 
-                  (let [{:keys [navigation-button-pressed]}
-                        (get @screens-ref key)
+                   (let [{:keys [navigation-button-pressed]}
+                         (get @screens-ref key)
 
-                        props
-                        (get-props this)]
+                         props
+                         (get-props this)]
 
-                    (js/console.log "navigationButtonPressed"
-                                    key
-                                    (boolean navigation-button-pressed)
-                                    (pr-str props))
-                    (when navigation-button-pressed
-                      (navigation-button-pressed props)))))
+                     (js/console.log "navigationButtonPressed"
+                                     key
+                                     (boolean navigation-button-pressed)
+                                     (pr-str props))
+                     (when navigation-button-pressed
+                       (navigation-button-pressed props)))))
 
-               :componentDidAppear
-               (fn []
-                 (this-as
-                  ^js this
+                :componentDidAppear
+                (fn []
+                  (this-as
+                   ^js this
 
-                  (js/console.log "componentDidAppear" key)))
+                   (js/console.log "componentDidAppear" key)))
 
-               :componentDidDisappear
-               (fn []
-                 (this-as
-                  ^js this
+                :componentDidDisappear
+                (fn []
+                  (this-as
+                   ^js this
 
-                  (js/console.log "componentDidDisappear" key)))
+                   (js/console.log "componentDidDisappear" key)))
 
-               :render
-               (fn []
-                 (this-as
-                  ^js this
+                :render
+                (fn []
+                  (this-as
+                   ^js this
 
-                  (let [{:keys [render]}
-                        (get @screens-ref key)
+                   (let [{:keys [render]}
+                         (get @screens-ref key)
 
-                        props
-                        (get-props this)]
+                         props
+                         (get-props this)]
 
-                    (js/console.log "render" key (pr-str props))
-                    (-> (render props)
-                        (r/as-element)))))})]
+                     (js/console.log "render" key (pr-str props))
+                     (-> (render props)
+                         (r/as-element)))))})]
 
-    (register-component key (fn [] wrapper))))
+     (when (not (nil? options))
+       (set! (.-options wrapper)
+             (fn [passProps] (clj->js options))))
+     (register-component key (fn [] wrapper)))))
 
 (defn reload {:dev/after-load true} []
   (doseq [[key instances] @mounted-ref
