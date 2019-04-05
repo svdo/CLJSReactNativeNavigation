@@ -16,7 +16,11 @@
 
 (env/add-screen
  "App"
- {:render
+ {:navigation-button-pressed
+  (fn [{:keys [buttonId]}]
+    (js/alert (str "Button was pressed: " buttonId)))
+
+  :render
   (fn [{:keys [component-id] :as props}]
     [:> rn/View {:style {:flex-direction "column"
                          :margin 40
