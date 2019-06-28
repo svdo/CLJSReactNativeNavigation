@@ -125,7 +125,7 @@ yarn react-native run-ios
 
 Tada!
 
-<img src="https://040code.github.io/assets/2019-04-02-rnn-clojurescript/Hi%20Shadow%21.png" height="50%" width="50%"  alt="Tada!" style="margin: 0 auto;" />
+<img src="https://040code.github.io/static/d72abc30f3bffb6109f050d2ed9661db/53236/hi-shadow.png" height="50%" width="50%"  alt="Tada!" style="margin: 0 auto;" />
 
 ## Hot Reloading
 
